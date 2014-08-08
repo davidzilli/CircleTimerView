@@ -14,6 +14,12 @@
         android:layout_height="200dp" />
 
     <com.bravebeard.circletimerview.CircleTimerView
+        android:id="@+id/purple_timer"
+        android:layout_margin="25dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp" />
+
+    <com.bravebeard.circletimerview.CircleTimerView
         android:id="@+id/orange_timer"
         android:layout_width="100dp"
         android:layout_height="100dp"

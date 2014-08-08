@@ -18,6 +18,8 @@ public class MainActivity extends Activity {
         orange_timer.config(android.R.color.holo_orange_dark, android.R.color.holo_orange_light, 3, 5000, false);
         CircleTimerView green_timer = (CircleTimerView) findViewById(R.id.green_timer);
         green_timer.config(android.R.color.holo_green_dark, android.R.color.holo_green_light, 40, 2000, true);
+        CircleTimerView purple_timer = (CircleTimerView) findViewById(R.id.purple_timer);
+        purple_timer.config(android.R.color.holo_purple, android.R.color.holo_blue_light, 5, 4000, false);
 
     }
 
