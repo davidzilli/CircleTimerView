@@ -62,15 +62,18 @@ public class CircleTimerView extends View implements
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        if (w <= 0 || h <= 0) {
+            return;
+        }
+
         Rect bounds = new Rect();
         this.getDrawingRect(bounds);
         // bounds will now contain none zero values
         int shortest_side = Math.min(bounds.width(), bounds.height());
         mWidth = shortest_side;
         mHeight = shortest_side;
-
+        //initAnimation();
         initCanvas();
-        initAnimation();
     }
 
     /*********************************************************************************
@@ -85,15 +88,17 @@ public class CircleTimerView extends View implements
         this.mReverse = reverse;
     }
 
+    public void start() {
+        initAnimation();
+    }
+
+    public void pause() {
+        animator.cancel();
+    }
+
     /*********************************************************************************
      * Private Methods for updating draw
      *********************************************************************************/
-
-    public static int convertDPtoPixels(Context context, float dp) {
-        final float scale = context.getResources().getDisplayMetrics().density;
-
-        return (int) (dp * scale + 0.5f);
-    }
 
     private void initCanvas() {
         b = Bitmap.createBitmap(convertDPtoPixels(mContext, mWidth), convertDPtoPixels(mContext, mHeight), Bitmap.Config.ARGB_8888);
@@ -115,6 +120,13 @@ public class CircleTimerView extends View implements
 
     @Override
     public void onDraw(Canvas canvas) {
+
+        /** If the canvas is uninitialized, we are still waiting
+         * for onSizeChanged to return proper values as the views
+         * are being laid out */
+        if (c == null) {
+            return;
+        }
 
         /** Clear the canvas */
         c.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
@@ -138,11 +150,16 @@ public class CircleTimerView extends View implements
 
         canvas.drawBitmap(b, 0, 0, new Paint());
 
+        /** Restart the loop */
         if (mSweepAngle > 360 || mSweepAngle < 0) {
             mSweepAngle = 0;
             initCanvas();
         }
     }
+
+    /*********************************************************************************
+     * Animation Overrides
+     *********************************************************************************/
 
     @Override
     public void onAnimationStart(Animator animation) {
@@ -168,5 +185,15 @@ public class CircleTimerView extends View implements
     public void onAnimationUpdate(ValueAnimator animation) {
         mSweepAngle = ((Float) (animation.getAnimatedValue())).floatValue();
         invalidate();
+    }
+
+    /*********************************************************************************
+     * Utilities
+     *********************************************************************************/
+
+    public static int convertDPtoPixels(Context context, float dp) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+
+        return (int) (dp * scale + 0.5f);
     }
 }
